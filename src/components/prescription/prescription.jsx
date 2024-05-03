@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
 import { addDoc, collection } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { fireDB } from "../../firebase/FirebaseConfig";
@@ -41,10 +42,18 @@ const Prescription = () => {
             const { prescriptionFile, ...uploadData } = data;
             const productRef = collection(fireDB, 'prescriptions');
             await addDoc(productRef, { ...uploadData, prescriptionUrl: fileUrl });
-            
+            toast.success("Prescription added successfully. Please wait, a doctor will contact you within 24 hours.");
+            setData({
+                name: "",
+                email: "",
+                phone: "",
+                address: "",
+                pincode: "",
+                prescriptionFile: null
+            });
         } catch (error) {
             console.error(error);
-          
+            toast.error("Failed to add prescription.");
         } finally {
             setLoading(false);
         }
